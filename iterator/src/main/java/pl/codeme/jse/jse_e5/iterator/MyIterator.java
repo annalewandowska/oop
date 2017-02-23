@@ -1,7 +1,7 @@
 package pl.codeme.jse.jse_e5.iterator;
 
 import java.util.Iterator;
-
+// zmiana w branchu
 public class MyIterator implements Iterable<Object>, Iterator<Object> {
 
     private Object[] items = { "1", "2", "3", "4" };
