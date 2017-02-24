@@ -37,5 +37,6 @@
 
   <modules>
   	<module>iterator</module>
+  	<module>oop</module>
   </modules>
 </project>
