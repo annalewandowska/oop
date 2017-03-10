@@ -14,7 +14,7 @@ public abstract class Samochod implements Pojazd, Serializable /* extends Object
 	public static int zanieczyszczenie = 100;
 	
 	static {
-		System.out.println("ÅadujÄ™ klasÄ™ samochod");
+		System.out.println("£adujê klasê samochod");
 	}
 
 	protected int lans = 0;

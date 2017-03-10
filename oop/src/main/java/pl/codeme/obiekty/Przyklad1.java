@@ -11,7 +11,6 @@ public class Przyklad1 {
 	public static void main(String[] args) {
 
 		Samochod.zanieczyszczenie = 150;
-
 		Samochod bryka1 = new Bmw();
 		Samochod bryka2 = new Bmw();
 		
@@ -35,9 +34,14 @@ public class Przyklad1 {
 			bryka1.przyspiesz();
 		} catch (NieWskoczylBiegException ex) {
 			StackTraceElement stack[] = ex.getStackTrace();
+			for(int i = 0; i < stack.length; i++){
+				System.out.println(stack[i].getClassName() +"->" + stack[i].getFileName() + "->" + stack[i].getMethodName() + "->"
+						+ stack[i].getLineNumber());
+			}
+			System.out.println(ex.getMessage());
 			System.out.println("NIE WSKOCZYL BIEG " + ex.getBieg());
 		} catch (RuntimeException ex) {
-			System.out.println("WYSTƒÑPI≈Å Z≈ÅY B≈ÅƒÑD!");
+			System.out.println("WYST•PI£ Z£Y B£•D!");
 			System.out.println(ex.getMessage());
 			System.out.println(ex.toString());
 		}
