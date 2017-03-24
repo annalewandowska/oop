@@ -3,7 +3,6 @@ package pl.codeme.output;
 import pl.codeme.exception.InvalidCharException;
 import pl.codeme.exception.OutOfScreenException;
 
-//narysowaæ liniê ukoœn¹ (5 parametrów) i ko³o - znaleŸæ algorytm
 public class Screen {
 
 		protected Point screen[][];
@@ -23,7 +22,6 @@ public class Screen {
 					} catch (InvalidCharException e) {}
 				}
 			}
-			
 		}
 		
 		public void drawPoint(int x, int y, char chr) throws OutOfScreenException, InvalidCharException{
@@ -67,50 +65,40 @@ public class Screen {
 			
 			int dx = Math.abs(x2 - x1);
 			int dy = Math.abs(y2 - y1);		
-			double q = ((double)(dy)/(double)(dx));
+			/*double q = ((double)(dy)/(double)(dx));*/
+			double q = (double)(y2-y1)/(double)(x2 - x1);
 			
-			if(dx == dy) {
-				drawDiagonalLine(x1, y1, x2, y2, chr);
-			}
+			//if(dx == dy) {
+			//	drawDiagonalLine(x1, y1, x2, y2, chr);
+			//} 
 			
-			if(dx > dy){
-				if(x2 > x1){
-					for(int i = 0; i <= dy; i++){
-						screen[x1 + (int)((double)i/q)][y1 + i].set(chr);	
-					}	
-				}else{
-					for(int i = 0; i <= dy; i++){
-						screen[x1 - (int)((double)i/q)][y1 + i].set(chr);	
+			if( dx > dy ) {
+				if( x1 < x2 ){
+					for(int j = x1; j <= x2 ; j++) {
+						screen[j][ y1 + (int)(q*j) ].set(chr);
+					}
+				}
+				else {
+					for(int j = x2; j <= x1 ; j++) {
+						screen[j][ y2 + (int)(q*j) ].set(chr);
+					}
+				}
+			} 
+			else {
+				if( y1 < y2 ) {
+					for(int j=y1; j<= y2; j++){
+						screen[ x1 + (int)(j/q) ][j].set(chr);
+					}
+				}
+				else {
+					for(int j=y2; j<= y1; j++){
+						screen[ x2 + (int)(j/q) ][j].set(chr);
 					}
 				}
 			}
-		
+
 		}
 		
-		//rysuje liniê ukoœn¹ 
-//		public void drawDiagonal(int x1, int y1, int x2, int y2, char chr)
-//				throws OutOfScreenException, InvalidCharException{
-//			if(y1 >= height || x1 >= width || y2 >= height || x2 >= width) 
-//				throw new OutOfScreenException();
-//			
-//			double q = ((double)(y2 - y1)/(double)(x2 - x1));
-//			
-//			if(Math.abs(x2 - x1) > Math.abs(y2 - y1)){
-//				for(int j = x1; j <= x2 ; j++ ){	
-//					screen[j][y1 + (int)Math.round((q*j))].set(chr);
-//				}	
-//			}
-//			if(Math.abs(x2 - x1) < Math.abs(y2 - y1)){		
-//				for(int i = y1, j = x1; i <= y2  && j <= x2 ; j++ ){	
-//					screen[i + (int)Math.round((q*j))][j].set(chr);
-//				}
-//			} else {
-//				for(int i = y1, j = x1; i <= y2  && j <= x2; i++, j++){	
-//					screen[i][j].set(chr);
-//				}
-//			}
-//		}
-	
 		
 		public Point[][] getScreen(){
 			return screen;

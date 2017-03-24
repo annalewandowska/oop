@@ -15,9 +15,16 @@ public class UI {
 		//	ui.printUglyScreen(uScreen);
 		
 		try {
-		//	screen.drawPoint(0, 2, 'A');
+		//	screen.drawPoint(0, 2, 'A')
 		//	screen.drawDiagonalLine(15, 15, 0, 0, 'x');
-			screen.drawDiagonal(0, 0 , 19, 2, 'x');
+		//	screen.drawDiagonal(15, 8 , 4, 2, 'x');
+		//	screen.drawDiagonal(5, 10, 0, 0, 'o');
+		//	screen.drawDiagonal(10, 0, 1, 5, 'm');
+		//	screen.drawDiagonal(1, 1, 11, 5, 'e');  // ok
+		//	screen.drawDiagonal(1, 5, 11, 1, 'e'); // ok
+		//	screen.drawDiagonal(5, 1, 1, 12, 'e'); // ok
+		//	screen.drawDiagonal(4, 11, 1, 2, 'e'); // ok
+			screen.drawDiagonal(1, 1, 9, 9, 'e');
 		}catch(OutOfScreenException ex){
 			System.out.println("Rysujesz poza ekranem");
 		}
