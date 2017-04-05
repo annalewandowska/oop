@@ -37,14 +37,17 @@ public class ScreenCheckers {
 				}
 			}
 		}
-		
-		for(int i = 0; i < height; i++){
+		System.out.print("| |1|2|3|4|5|6|7|8|");
+		System.out.println();
+
+		for(int i = 1; i < height+1; i++){
+			System.out.print("|" + i + "|");
 			for(int j = 0; j < width; j++){
-				System.out.print(screenCh[j][i]);
+				System.out.print(screenCh[j][i-1]);
 			}	
 			System.out.println();
 		}
-		
+
 	}
 	
 	

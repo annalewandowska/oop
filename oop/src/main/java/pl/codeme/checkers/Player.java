@@ -38,5 +38,9 @@ public class Player {
 	public boolean hasPawns(){
 		return pawns.size() > 0;
 	}
+	public List<Pawn> getPawns(){
+		return pawns;
+	}
+	
 	
 }

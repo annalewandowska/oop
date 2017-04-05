@@ -15,28 +15,26 @@ public class Checkers {
 		ScreenCheckers scrCh = new ScreenCheckers();
 
 		Player currentPlayer = player1;
+		Player opponent = player2;
 		
-		//while(player1.hasPawns() && player2.hasPawns()){
-		while(true){
+		while(player1.hasPawns() && player2.hasPawns()){
 			int pozStart[] = null;
-			int moves[][] = null;
 
 			scrCh.drawScreenCheckers(board);
+			System.out.println(currentPlayer.getColour() + " player turn");
 			pozStart = readStartPos(currentPlayer, board);
-			readMoves(currentPlayer, board, pozStart);
-		
-//			simpleMove(currentPlayer, board, pozStart, moves);
-	//		jumpMove(currentPlayer, board, pozStart, moves);
-			
-//			System.out.println(pozStart[0]);
-//			System.out.println(pozStart[1]);
+			readMoves(currentPlayer, opponent, board, pozStart);
 			
 			if(currentPlayer == player1){
 				currentPlayer = player2;
+				opponent = player1;
 			}else {
 				currentPlayer = player1;
+				opponent = player2;
 			}
 		}
+		scrCh.drawScreenCheckers(board);
+		System.out.println("Zwyciê¿y³ gracz: " + opponent.getColour());
 	}
 	
 	private static void simpleMove(Player player, Pawn[][] board, int[] pozStart, int[] move){
@@ -48,8 +46,8 @@ public class Checkers {
 		board[pozStart[0]][pozStart[1]] = null;
 	}
 	
-	private static void jumpMove(Player player, Pawn[][] board, int[] pozStart, int[] move){
-	
+	private static void jumpMove(Player player, Player opponent, Pawn[][] board, int[] pozStart, int[] move){
+			
 		int dx = move[0] - pozStart[0];
 		int dy = move[1] - pozStart[1];
 		
@@ -57,19 +55,19 @@ public class Checkers {
 		board[pozStart[0]][pozStart[1]] = null;
 		
 		if(dx > 0 && dy > 0){
-			player.removePawn(board[move[0] - 1][move[1] - 1]);
+			opponent.removePawn(board[move[0] - 1][move[1] - 1]);
 			board[move[0] - 1][move[1] - 1] = null;
 		}
 		if(dx > 0 && dy < 0){
-			player.removePawn(board[move[0] - 1][move[1] + 1]);
+			opponent.removePawn(board[move[0] - 1][move[1] + 1]);
 			board[move[0] - 1][move[1] + 1] = null;
 		}
 		if(dx < 0 && dy > 0){
-			player.removePawn(board[move[0] + 1][move[1] - 1]);
+			opponent.removePawn(board[move[0] + 1][move[1] - 1]);
 			board[move[0] + 1][move[1] - 1] = null;
 		}
 		if(dx < 0 && dy < 0){
-			player.removePawn(board[move[0] + 1][move[1] + 1]);
+			opponent.removePawn(board[move[0] + 1][move[1] + 1]);
 			board[move[0] + 1][move[1] + 1] = null;
 		}
 	}
@@ -79,9 +77,10 @@ public class Checkers {
 		pozStart = askUserAboutPawn();
 		
 		if(board[pozStart[0]][pozStart[1]] == null){
-				pozStart = askUserAboutPawn();
+			System.out.println("There is no pawn here, try again");
+			pozStart = readStartPos(player, board);
 		} else if(board[pozStart[0]][pozStart[1]].getPlayer() != player){
-			System.out.println("To nie Twój pionek");
+			System.out.println("This is not your pawn, try again");
 			pozStart = readStartPos(player, board);
 		}
 		return pozStart;
@@ -92,67 +91,70 @@ public class Checkers {
 		Scanner sc = new Scanner(System.in);
 		int pozStart[] = new int[2];
 		
-		System.out.print("Choose pawn x: ");
+		System.out.print("Choose pawn, x: ");
 		pozStart[0] = sc.nextInt() - 1;
-		System.out.print("Choose pawn y: ");
+		System.out.print("Choose pawn, y: ");
 		pozStart[1] = sc.nextInt() - 1;
 		return pozStart;
 	}
-	
-	  private static void readMoves(Player player, Pawn[][] board, int[] pozStart) {
 
+	private static int[] askUserAboutMoves(){
+		int[] move = new int[2];
+
+		Scanner input = new Scanner(System.in);
+
+		System.out.println("Where do you want to move x? ");
+		move[0] = input.nextInt() - 1;
+		//String str = input.nextLine();
+		System.out.println("Where do you want to move y? ");
+		move[1] = input.nextInt()-1;
+
+		// input.close();
+
+		return move;
+	}
+	
+	  private static void readMoves(Player player, Player opponent, Pawn[][] board, int[] pozStart) {
+
+		  ScreenCheckers scrCh = new ScreenCheckers();
 		  int[] move = new int[2];
 
 		  int dx = 0;
 		  int dy = 0;
 
 		  move = askUserAboutMoves();
-
+		  
+		  //dopisaæ funkcjê checkIfMovePossible i dodaæ do if
 		  if(board[move[0]][move[1]] != null){
-			  System.out.println("Nie mo¿esz siê tu ruszyæ, wybierz jeszcze raz");
+			  System.out.println("You can't move here, choose again");
 			  move = askUserAboutMoves();  
 		  }
 
 		  dx = Math.abs(pozStart[0] - move[0]);
 		  dy = Math.abs(pozStart[1] - move[1]);
-//		  System.out.println("dx " + dx);
-//		  System.out.println("dy " + dy);
 
 		  if (dx  == 1 && dy == 1) {
 			  simpleMove(player, board, pozStart, move);
 		  }
 
 		  else if (dx  == 2 && dy == 2){
-			  jumpMove(player, board, pozStart, move);
+			  jumpMove(player, opponent, board, pozStart, move);
 			  
-			  while( checkIfCapturePossible(player, board, move)){
+			  while(checkIfCapturePossible(player, board, move)){
 				  int[] tmpMove = move;
+				  scrCh.drawScreenCheckers(board);
+				  System.out.println(player.getColour() + " can capture another pawn");
 				  move = askUserAboutMoves();  
-				  jumpMove(player, board, tmpMove, move);
+				  jumpMove(player, opponent, board, tmpMove, move);
 			  }
-		  }	else System.out.println("B³¹d!");
+		  }	else System.out.println("You can't move here!");
 		  
 	  }
 
-	  private static int[] askUserAboutMoves(){
-		  int[] move = new int[2];
-		  
-		  Scanner input = new Scanner(System.in);
-		  
-		  System.out.println("Where do you want to move x? ");
-		  move[0] = input.nextInt() - 1;
-		  //String str = input.nextLine();
-		  System.out.println("Where do you want to move y? ");
-		  move[1] = input.nextInt()-1;
-		  
-		 // input.close();
-
-		  return move;
-	  }
 	  
 	  public static boolean checkIfCapturePossible(Player player, Pawn[][] board, int[] move){
 		  
-		  boolean check = false;
+		  boolean check = true;
 		  
 		  Player currentPlayer = board[move[0]][move[1]].getPlayer();
 //		  System.out.println(currentPlayer.getName());
@@ -169,17 +171,3 @@ public class Checkers {
 }
 
 
-/*
-//dopóki currentPlayer poda z³e pozycje{
-	//zapytaj currentPlayer którym pionkiem chce ruszyæ
-	//spytaj currentPlayer gdzie chce ruszyæ pionkiem
-	 * listê kolejnych ruchów danym pionkiem
-//}
- 
- rusz pionek currentPlayer z pozycji 1 na poz 2
- 
- sprawdŸ czy nie koniec gry
- 
- ustaw currentPlayer na kolejnego gracza
-
- */
