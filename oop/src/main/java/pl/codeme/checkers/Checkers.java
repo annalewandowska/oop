@@ -76,6 +76,8 @@ public class Checkers {
 		int pozStart[] = new int[2];
 		pozStart = askUserAboutPawn();
 		
+		//napisaæ metod¹ spr czy ruch tym pionkiem jest mo¿liwy
+		
 		if(board[pozStart[0]][pozStart[1]] == null){
 			System.out.println("There is no pawn here, try again");
 			pozStart = readStartPos(player, board);
@@ -93,8 +95,16 @@ public class Checkers {
 		
 		System.out.print("Choose pawn, x: ");
 		pozStart[0] = sc.nextInt() - 1;
+		while(!validateInput(pozStart[0])){
+			System.out.println("Z³a liczba, podaj liczbê z zakresu 1-8");
+			pozStart[0] = sc.nextInt() - 1;
+		}
 		System.out.print("Choose pawn, y: ");
 		pozStart[1] = sc.nextInt() - 1;
+		while(!validateInput(pozStart[1])){
+			System.out.println("Z³a liczba, podaj liczbê z zakresu 1-8");
+			pozStart[1] = sc.nextInt() - 1;
+		}
 		return pozStart;
 	}
 
@@ -105,13 +115,29 @@ public class Checkers {
 
 		System.out.println("Where do you want to move x? ");
 		move[0] = input.nextInt() - 1;
-		//String str = input.nextLine();
+		while(!validateInput(move[0])){
+			System.out.println("Z³a liczba, podaj liczbê z zakresu 1-8");
+			move[0] = input.nextInt() - 1;
+		}
 		System.out.println("Where do you want to move y? ");
 		move[1] = input.nextInt()-1;
-
+		while(!validateInput(move[1])){
+			System.out.println("Z³a liczba, podaj liczbê z zakresu 1-8");
+			move[1] = input.nextInt() - 1;
+		}
 		// input.close();
 
 		return move;
+	}
+	
+	private static boolean validateInput(int input){
+		boolean check = false;
+		
+		if(0 <= input && input < 8){
+			check = true;
+		}
+		
+		return check;
 	}
 	
 	  private static void readMoves(Player player, Player opponent, Pawn[][] board, int[] pozStart) {
@@ -136,35 +162,53 @@ public class Checkers {
 		  if (dx  == 1 && dy == 1) {
 			  simpleMove(player, board, pozStart, move);
 		  }
-
-		  else if (dx  == 2 && dy == 2){
+		  
+		  //sprawdziæ, czy faktycznie jest bicie
+		  else if (dx  == 2 && dy == 2 && checkIfCapturePossible(opponent, board, pozStart)){
+			  
 			  jumpMove(player, opponent, board, pozStart, move);
 			  
-			  while(checkIfCapturePossible(player, board, move)){
+			  while(checkIfCapturePossible(opponent, board, move)){
 				  int[] tmpMove = move;
 				  scrCh.drawScreenCheckers(board);
 				  System.out.println(player.getColour() + " can capture another pawn");
 				  move = askUserAboutMoves();  
 				  jumpMove(player, opponent, board, tmpMove, move);
 			  }
-		  }	else System.out.println("You can't move here!");
+		  }	else {
+			  System.out.println("You can't move here!");
+			  readMoves(player, opponent, board, pozStart);
+			  }
 		  
 	  }
 
 	  
-	  public static boolean checkIfCapturePossible(Player player, Pawn[][] board, int[] move){
+	  public static boolean checkIfCapturePossible(Player opponent, Pawn[][] board, int[] move){
 		  
-		  boolean check = true;
+		  boolean check = false;
+		  int x = move[0];
+		  int y = move[1];
 		  
-		  Player currentPlayer = board[move[0]][move[1]].getPlayer();
-//		  System.out.println(currentPlayer.getName());
-//		  
-//		  if(  board[move[0]-1][move[1]-1] != null && board[move[0]-1][move[1]-1].getPlayer() != currentPlayer && (move[0]-1 >= 0 && move[1]-1 >= 0)
-//			|| board[move[0]+1][move[1]+1] != null && board[move[0]+1][move[1]+1].getPlayer() != currentPlayer && (move[0]+1 <= 7 && move[1]+1 <= 7)
-//			|| board[move[0]-1][move[1]+1] != null && board[move[0]-1][move[1]+1].getPlayer() != currentPlayer && (move[0]-1 >= 0 && move[1]+1 <= 7)
-//			|| board[move[0]+1][move[1]-1] != null && board[move[0]+1][move[1]-1].getPlayer() != currentPlayer && (move[0]+1 <= 7 && move[1]-1 >= 0)){
-//			check = true;
-//		  }
+		  if((x-2 >= 0 && y-2 >= 0)){
+			  if(board[x-1][y-1] != null && board[x-1][y-1].getPlayer() == opponent && board[x-2][y-2] == null){
+				  check = true;
+			  }
+		  }
+		  if(x+2 <= 7 && y+2 <= 7){
+			  if(board[x+1][y+1] != null && board[x+1][y+1].getPlayer() == opponent && board[x+2][y+2] == null){
+				  check = true;
+			  }
+		  }
+		  if(x-2 >= 0 && y+2 <= 7){
+			  if(board[x-1][y+1] != null && board[x-1][y+1].getPlayer() == opponent && board[x-2][y+2] == null){
+				  check = true;
+			  }
+		  }
+		  if(x+2 <= 7 && y-2 >= 0){
+			  if(board[x+1][y-1] != null && board[x+1][y-1].getPlayer() == opponent && board[x+2][y-2] == null){
+				  check = true;
+			  }
+		  }
 		  return check;
 	  }
 
